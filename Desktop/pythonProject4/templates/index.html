@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preencha o formulário para calcular seu desconto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            background-image: url("{{ url_for('static', filename='imagens.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        select {
+            height: 40px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Preencha o formulário para calcular seu desconto</h1>
+        <form action="/" method="POST">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" required>
+            </div>
+            <div class="form-group">
+                <label for="Telefone">Telefone:</label>
+                <input type="text" id="Telefone" name="Telefone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="pontuacao_enem">Pontuação no ENEM:</label>
+                <input type="text" id="pontuacao_enem" name="pontuacao_enem" required>
+            </div>
+            <div class="form-group">
+                <label for="curso">Escolha o Curso:</label>
+                <select id="curso" name="curso" required>
+                    <option value="">Selecione</option>
+                    <option value="Administração">Administração</option>
+                    <option value="Ciências Contábeis">Ciências Contábeis</option>
+                    <option value="Enfermagem">Enfermagem</option>
+                    <option value="Filosofia">Filosofia</option>
+                    <option value="Odontologia">Odontologia</option>
+                    <option value="Arquitetura e Urbanismo">Arquitetura e Urbanismo</option>
+                    <option value="Direito">Direito</option>
+                    <option value="Farmácia">Farmácia</option>
+                    <option value="Gestão de Tecnologia da Informação">Gestão de Tecnologia da Informação</option>
+                    <option value="Psicologia">Psicologia</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Calcular</button>
+        </form>
+    </div>
+</body>
+
+</html>
