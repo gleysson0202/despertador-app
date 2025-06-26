@@ -10,46 +10,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: Check out the code
       uses: actions/checkout@v3
 
-    - name: Setup JDK 17
-      uses: actions/setup-java@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        distribution: 'temurin'
-        java-version: '17'
+        python-version: '3.10'
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y unzip wget python3-pip python3-setuptools python3-wheel git openjdk-17-jdk
-
-    - name: Install Android SDK
-      run: |
-        mkdir -p $HOME/android-sdk/cmdline-tools
-cd $HOME/android-sdk/cmdline-tools
-wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
-unzip cmdline-tools.zip
-mv cmdline-tools latest
-rm cmdline-tools.zip
-
-        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-31" "build-tools;31.0.0"
-
-    - name: Add Android SDK tools to PATH
-      run: echo "$HOME/android-sdk/platform-tools:$HOME/android-sdk/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+        sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel git wget
 
     - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip
         pip install buildozer cython==0.29.36
 
+    - name: Install Android SDK command line tools
+      run: |
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
+        unzip cmdline-tools.zip
+        mv cmdline-tools latest
+        rm cmdline-tools.zip
+
+    - name: Accept SDK licenses and install platforms/build-tools
+      run: |
+        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
+        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+
     - name: Build APK with Buildozer
       env:
         ANDROIDSDK: ${{ env.HOME }}/android-sdk
-        ANDROIDNDK: ${{ env.HOME }}/android-sdk/ndk-bundle
+        ANDROIDNDK: ${{ env.HOME }}/.buildozer/android/platform/android-ndk-r25b
         ANDROIDAPI: 31
         ANDROIDMINAPI: 21
-        ANDROIDBUILDTOOLS: 31.0.0
-        PATH: ${{ env.HOME }}/android-sdk/platform-tools:${PATH}
       run: |
         buildozer android debug
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: alarmvideoapp.apk
+        path: bin/*.apk
+
