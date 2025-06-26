@@ -10,20 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the code
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install system dependencies
+    - name: Verify git version
+      run: git --version
+
+    - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel wget git
+        sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel wget
 
     - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip
         pip install buildozer cython==0.29.36
 
-    - name: Install Android SDK command line tools
+    - name: Setup Android SDK command line tools
       run: |
         mkdir -p $HOME/android-sdk/cmdline-tools
         cd $HOME/android-sdk/cmdline-tools
@@ -37,18 +40,18 @@ jobs:
         yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
         yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
-    - name: Build APK with Buildozer
+    - name: Build APK
       env:
         ANDROIDSDK: ${{ env.HOME }}/android-sdk
         ANDROIDNDK: ${{ env.HOME }}/.buildozer/android/platform/android-ndk-r25b
         ANDROIDAPI: 31
         ANDROIDMINAPI: 21
-      run: |
-        buildozer android debug
+      run: buildozer android debug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: alarmvideoapp.apk
         path: bin/*.apk
+
 
