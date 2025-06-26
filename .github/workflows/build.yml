@@ -26,17 +26,18 @@ jobs:
         sudo apt update
         sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel git wget
 
-    - name: Install Android SDK command line tools
+    - name: Install Android SDK command line tools (corrected)
       run: |
-        mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
-        cd $ANDROID_SDK_ROOT/cmdline-tools
+        mkdir -p $ANDROID_SDK_ROOT
+        cd $ANDROID_SDK_ROOT
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O tools.zip
         unzip tools.zip
-        mkdir latest
-        mv cmdline-tools/* latest/
-        rm -rf cmdline-tools tools.zip
+        rm tools.zip
+        mv cmdline-tools latest
+        mkdir cmdline-tools
+        mv latest cmdline-tools/
 
-    - name: Accept licenses and install build tools
+    - name: Accept licenses and install build tools (corrected)
       run: |
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
         $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-31" "build-tools;31.0.0"
