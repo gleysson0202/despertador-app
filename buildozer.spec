@@ -10,6 +10,8 @@ package.domain = org.gleysson
 # Pasta onde está o código fonte (geralmente a raiz do projeto)
 source.dir = .
 
+version = 1.0
+
 # Extensões de arquivo a incluir no pacote (incluindo mp4 para vídeos)
 source.include_exts = py,png,jpg,kv,atlas,mp4
 
