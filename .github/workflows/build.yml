@@ -10,28 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the code
+    - name: Checkout do repositório
       uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - name: Install dependencies
+    - name: Instalar dependências
       run: |
         sudo apt update
         sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel git
         pip install --upgrade pip
         pip install buildozer cython==0.29.36
 
-    - name: Initialize Buildozer
+    - name: Criar diretórios esperados do SDK
+      run: |
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/build-tools
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/platform-tools
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/platforms/android-31
+
+    - name: Build APK com Buildozer
       run: |
         buildozer android debug
 
-    - name: Upload APK
+    - name: Upload do APK
       uses: actions/upload-artifact@v3
       with:
         name: alarmvideoapp.apk
         path: bin/*.apk
-
