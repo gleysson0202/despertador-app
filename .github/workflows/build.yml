@@ -21,26 +21,30 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel git wget
 
-    - name: Install Android SDK command line tools (corrected)
+    - name: Install Android SDK (correct approach)
       run: |
         mkdir -p $ANDROID_SDK_ROOT
         cd $ANDROID_SDK_ROOT
-        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O tools.zip
-        unzip tools.zip
-        rm tools.zip
-        mv cmdline-tools latest
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        unzip commandlinetools-linux-9477386_latest.zip
+        rm commandlinetools-linux-9477386_latest.zip
         mkdir cmdline-tools
-        mv latest cmdline-tools/
+        mv tools cmdline-tools/latest
+        
+        # Verify installation
+        ls -la $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/
 
-    - name: Accept licenses and install build tools (corrected)
+    - name: Set up Android SDK
       run: |
-        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+        export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+        yes | sdkmanager --licenses
+        sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+        echo "Android SDK setup complete"
 
     - name: Build APK
       env:
