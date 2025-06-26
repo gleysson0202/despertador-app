@@ -27,10 +27,11 @@ jobs:
         yes | buildozer android clean
         yes | buildozer android debug
 
-    - name: Upload do APK
+   - name: Upload do APK
   uses: actions/upload-artifact@v4
   with:
     name: alarmvideoapp.apk
     path: bin/*.apk
+
 
 
