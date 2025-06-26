@@ -28,29 +28,29 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython==0.29.36
 
-    - name: Install Android SDK command line tools
+    - name: Download Android SDK command line tools
       run: |
         mkdir -p $HOME/android-sdk/cmdline-tools
         cd $HOME/android-sdk/cmdline-tools
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
         unzip cmdline-tools.zip
         rm cmdline-tools.zip
-        if [ -d "cmdline-tools" ]; then
-          mv cmdline-tools latest
-        fi
+        # Mover o conteúdo para a pasta correta
+        mv cmdline-tools latest
 
-    - name: Accept SDK licenses and install platforms/build-tools
+    - name: Accept licenses and install SDK packages
       run: |
-        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
-        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+        export ANDROID_SDK_ROOT=$HOME/android-sdk
+        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
+        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
     - name: Build APK with Buildozer
       env:
-        ANDROIDSDK: ${{ env.HOME }}/android-sdk
-        ANDROIDNDK: ${{ env.HOME }}/.buildozer/android/platform/android-ndk-r25b
+        ANDROIDSDK: $HOME/android-sdk
+        ANDROIDNDK: $HOME/.buildozer/android/platform/android-ndk-r25b
         ANDROIDAPI: 31
         ANDROIDMINAPI: 21
-        PATH: ${{ env.HOME }}/android-sdk/cmdline-tools/latest/bin:$PATH
+        PATH: $HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH
       run: |
         buildozer android debug
 
