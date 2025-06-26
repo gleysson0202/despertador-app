@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the code
-      uses: actions/checkout@v3
-
-    - name: Install system dependencies
+    # Primeiro: instalar git (para o checkout funcionar) e dependências de sistema
+    - name: Install system dependencies (including git)
       run: |
         sudo apt update
         sudo apt install -y git zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel wget
+
+    # Agora sim, fazer checkout do código
+    - name: Check out the code
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -35,7 +37,6 @@ jobs:
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
         unzip cmdline-tools.zip
         rm cmdline-tools.zip
-        # Mover o conteúdo para a pasta correta
         mv cmdline-tools latest
 
     - name: Accept licenses and install SDK packages
