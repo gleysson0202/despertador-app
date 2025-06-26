@@ -9,7 +9,6 @@ requirements = python3,kivy,plyer
 orientation = portrait
 fullscreen = 1
 android.permissions = WAKE_LOCK, INTERNET
-android.build_tools_version = 36.0.0
 
 [buildozer]
 log_level = 2
